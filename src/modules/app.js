@@ -11,7 +11,7 @@ const initApp = () => {
     document.getElementById("addProjectBtn").addEventListener("click", () => {
         const projectName = prompt("Enter project name:");
         if (projectName) {
-            projects.push(Project(projectName));
+            projects.push(new Project(projectName));
             saveProjects(projects);
             renderProjects();
         }
