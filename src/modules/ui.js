@@ -80,6 +80,7 @@ const renderTodos = () => {
             renderTodos();
         });
 
+        todoElement.appendChild(checkbox);
         todoElement.appendChild(text);
         todoElement.appendChild(deleteBtn);
         todoContainer.appendChild(todoElement);
