@@ -40,6 +40,10 @@ const renderTodos = () => {
             todoElement.classList.add("completed");
         }
 
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = todo.completed;
+
         // Add class based on priority
         if (todo.priority === "high") {
             todoElement.classList.add("high-priority");
