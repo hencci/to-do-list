@@ -21,3 +21,11 @@
     background-color: #eef7ff;
     max-width: 300px;
 }
+
+.todo button {
+    background-color: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1rem;
+}
