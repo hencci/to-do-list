@@ -44,6 +44,13 @@ const renderTodos = () => {
         checkbox.type = "checkbox";
         checkbox.checked = todo.completed;
 
+        // Toggle completed state
+        checkbox.addEventListener("change", () => {
+            todo.completed = checkbox.checked;
+            saveProjects(projects);
+            renderTodos(); // re-render to apply styles
+        });
+
         // Add class based on priority
         if (todo.priority === "high") {
             todoElement.classList.add("high-priority");
