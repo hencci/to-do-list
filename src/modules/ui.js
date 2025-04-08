@@ -36,6 +36,10 @@ const renderTodos = () => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
 
+        if (todo.completed) {
+            todoElement.classList.add("completed");
+        }
+
         // Add class based on priority
         if (todo.priority === "high") {
             todoElement.classList.add("high-priority");
