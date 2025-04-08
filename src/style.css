@@ -13,3 +13,11 @@
     width: 100%;
     padding: 0.3rem;
 }
+
+#editTodoForm {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #0077cc;
+    background-color: #eef7ff;
+    max-width: 300px;
+}
