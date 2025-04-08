@@ -55,3 +55,8 @@
     border-color: green;
     background-color: #e5ffe5;
 }
+
+.completed span {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
