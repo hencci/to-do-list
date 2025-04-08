@@ -35,13 +35,29 @@ const renderTodos = () => {
     currentProject.todos.forEach((todo, index) => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
-        todoElement.textContent = `${todo.title} - ${todo.dueDate} (${todo.priority})`;
+
+        const text = document.createElement("span");
+        text.textContent = `${todo.title} - ${todo.dueDate} (${todo.priority})`;
+        text.style.color = "pointer";
 
         // Clicking opens the edit form
-        todoElement.addEventListener("click", () => {
+        text.addEventListener("click", () => {
             openEditForm(todo, index);
         });
-        
+
+        // Delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "❌";
+        deleteBtn.style.marginLeft = "10px";
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // prevent opening the edit form
+            currentProject.todos.splice(index, 1);
+            saveProjects(projects);
+            renderTodos();
+        });
+
+        todoElement.appendChild(text);
+        todoElement.appendChild(deleteBtn);
         todoContainer.appendChild(todoElement);
     });
 };
