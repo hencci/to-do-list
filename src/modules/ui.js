@@ -36,6 +36,15 @@ const renderTodos = () => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
 
+        // Add class based on priority
+        if (todo.priority === "high") {
+            todoElement.classList.add("high-priority");
+        } else if (todo.priority === "medium") {
+            todoElement.classList.add("medium-priority");
+        } else if (todo.priority === "low") {
+            todoElement.classList.add("low-priority");
+        }
+
         const text = document.createElement("span");
         text.textContent = `${todo.title} - ${todo.dueDate} (${todo.priority})`;
         text.style.color = "pointer";
