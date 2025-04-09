@@ -14,17 +14,51 @@ const renderProjects = () => {
     const projectContainer = document.getElementById("projects");
     projectContainer.innerHTML = "";
 
-    projects.forEach((project) => {
-        const projectElement = document.createElement("div");
-        projectElement.textContent = project.name;
-        projectElement.style.cursor = "pointer";
+    projects.forEach((project, index) => {
+        const projectItem = document.createElement("div");
+        projectItem.classList.add("project-item");
+        projectItem.textContent = project.name;
 
-        projectElement.addEventListener("click", () => {
+        // Click to set current project
+        projectItem.addEventListener("click", () => {
             currentProject = project;
+            renderProjects();
             renderTodos();
         });
 
-        projectContainer.appendChild(projectElement);
+        // Show which one is selected
+        if (currentProject === project) {
+            projectItem.classList.add("active");
+        }
+
+        // Delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗑️";
+        deleteBtn.classList.add("delete-project");
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // prevent setting project
+
+            if (project === currentProject) {
+                alert("Cannot delete the active project. Switch to another project first.");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete the project "${project.name}"?`)) {
+                projects.splice(index, 1);
+                saveProjects(projects);
+
+                // Fallback to first project if current was deleted
+                if (!projects.includes(currentProject)) {
+                    currentProject = projects[0];
+                }
+
+                renderProjects();
+                renderTodos();
+            }
+        });
+
+        projectItem.appendChild(deleteBtn);
+        projectContainer.appendChild(projectItem);
     });
 };
 
