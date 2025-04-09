@@ -23,6 +23,10 @@ const renderProjects = () => {
         nameSpan.textContent = project.name;
         nameSpan.classList.add("project-name");
 
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.classList.add("edit-project");
+
         // Click to set current project
         projectItem.addEventListener("click", () => {
             currentProject = project;
