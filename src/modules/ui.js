@@ -17,7 +17,11 @@ const renderProjects = () => {
     projects.forEach((project, index) => {
         const projectItem = document.createElement("div");
         projectItem.classList.add("project-item");
-        projectItem.textContent = project.name;
+        
+        // Display area
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = project.name;
+        nameSpan.classList.add("project-name");
 
         // Click to set current project
         projectItem.addEventListener("click", () => {
