@@ -88,6 +88,8 @@ const renderProjects = () => {
             }
         });
 
+        projectItem.appendChild(nameSpan);
+        projectItem.appendChild(editBtn);
         projectItem.appendChild(deleteBtn);
         projectContainer.appendChild(projectItem);
     });
