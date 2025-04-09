@@ -26,6 +26,29 @@ const renderProjects = () => {
         const editBtn = document.createElement("button");
         editBtn.textContent = "✏️";
         editBtn.classList.add("edit-project");
+        editBtn.classList.add("edit-project");
+        editBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = project.name;
+            input.classList.add("edit-input");
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    const newName = input.value.trim();
+                    if (newName) {
+                        project.name = newName;
+                        saveProjects(projects);
+                        renderProjects();
+                        renderTodos();
+                    }
+                }
+            });
+            projectItem.replaceChild(input, nameSpan);
+            input.focus();
+        });
 
         // Click to set current project
         projectItem.addEventListener("click", () => {
