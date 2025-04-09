@@ -73,9 +73,14 @@
     background-color: #e0f7ff;
 }
 
-.delete-project {
+.edit-project, .delete-project {
     background: none;
     border: none;
-    color: red;
     cursor: pointer;
+    margin-left: 5px;
+}
+
+.edit-input {
+    width: 100%;
+    font-size: 1rem;
 }
