@@ -111,6 +111,17 @@ const renderTodos = () => {
     currentProject.todos.forEach((todo, index) => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
+    
+        // Format due date
+        const due = document.createElement("span");
+        due.classList.add("todo-due");
+        try {
+            const formattedDate = format(parseISO(todo.dueDate), "MMM dd, yyyy");
+            due.textContent = `Due : ${formattedDate}`;
+        }
+        catch {
+            due.textContent = "Due: Invalid date";
+        }
 
         if (todo.completed) {
             todoElement.classList.add("completed");
@@ -137,8 +148,8 @@ const renderTodos = () => {
         }
 
         const text = document.createElement("span");
-        text.textContent = `${todo.title} - ${todo.dueDate} (${todo.priority})`;
-        text.style.color = "pointer";
+        text.textContent = `${todo.title} - (${todo.priority})`;
+        text.style.cursor = "pointer";
 
         // Clicking opens the edit form
         text.addEventListener("click", () => {
@@ -158,6 +169,7 @@ const renderTodos = () => {
 
         todoElement.appendChild(checkbox);
         todoElement.appendChild(text);
+        todoElement.appendChild(due);
         todoElement.appendChild(deleteBtn);
         todoContainer.appendChild(todoElement);
     });
