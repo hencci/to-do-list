@@ -90,3 +90,9 @@
     color: #666;
     font-size: 0.9rem;
 }
+
+.todo-due {
+    font-size: 0.85rem;
+    color: #888;
+    margin-left: 100px;
+}
