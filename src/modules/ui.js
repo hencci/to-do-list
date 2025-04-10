@@ -23,6 +23,13 @@ const renderProjects = () => {
         nameSpan.textContent = project.name;
         nameSpan.classList.add("project-name");
 
+        // Add task summary
+        const completed = project.todos.filter(todo => todo.completed).length;
+        const total = project.todos.length;
+        const summary = document.createElement("span");
+        summary.classList.add("project-summary");
+        summary.textContent = ` (${total} | ${completed} done)`;
+
         const editBtn = document.createElement("button");
         editBtn.textContent = "✏️";
         editBtn.classList.add("edit-project");
