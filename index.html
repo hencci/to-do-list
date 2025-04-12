@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <button id="addProjectBtn">Add Project</button>
+    <button id="addTodoBtn">Add Todo</button>
+
+    <div id="projects"></div>
+    <div id="todos"></div>
+
+    
+    <form id="todoForm" style="display: none;"> <!-- HIDDEN FORM -->
+        <h3>Add a New Todo</h3>
+        <input type="text" id="todoTitle" placeholder="Title" required />
+        <input type="text" id="todoDescription" placeholder="Description" />
+        <input type="date" id="todoDueDate" required />
+        <select id="todoPriority" required>
+            <option value="">Select Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <button type="submit">Add Todo</button>
+        <button type="button" id="cancelTodoBtn">Cancel</button>
+    </form>
+    <form id="editTodoForm" style="display: none;">
+        <h3>Edit Todo</h3>
+        <input type="text" id="editTodoTitle" required />
+        <input type="text" id="editTodoDescription" />
+        <input type="date" id="editTodoDueDate" required />
+        <select id="editTodoPriority" required>
+            <option value="">Select Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <button type="submit">Save Changes</button>
+        <button type="button" id="cancelEditBtn">Cancel</button>
+    </form>
+
+    <script src="bundle.js"></script>
+</body>
+</html>
