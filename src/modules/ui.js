@@ -6,209 +6,227 @@ import { saveProjects, loadProjects } from './storage';
 let projects = [];
 let currentProject = null;
 
+const projectContainer = document.getElementById("projects");
+const todoContainer = document.getElementById("todos");
+const addTodoTemplate = document.getElementById("addTodoBtnTemplate");
+
+// ============================
+// Utility Functions
+// ============================
+
+const createButton = (text, className, handler) => {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    if (className) btn.classList.add(className);
+    if (handler) btn.addEventListener("click", handler);
+    return btn;
+};
+
+const updateStorageAndRender = () => {
+    saveProjects(projects);
+    renderProjects();
+    renderTodos();
+};
+
+const getFormattedDate = (dateStr) => {
+    try {
+        return format(parseISO(dateStr), "MMM dd, yyyy");
+    } catch {
+        return "Invalid date";
+    }
+};
+
+// ============================
+// Project Rendering
+// ============================
+
 const setProjects = (loadedProjects) => {
     projects = loadedProjects;
-    if (!currentProject) currentProject = projects[0];
+    if (!currentProject && projects.length > 0) {
+        currentProject = projects[0];
+    }
+    renderProjects();
+    renderTodos();
 };
 
 const renderProjects = () => {
-    const projectContainer = document.getElementById("projects");
     projectContainer.innerHTML = "";
 
     projects.forEach((project, index) => {
         const projectItem = document.createElement("div");
         projectItem.classList.add("project-item");
-        
-        // Display area
+
         const nameSpan = document.createElement("span");
         nameSpan.textContent = project.name;
         nameSpan.classList.add("project-name");
 
-        // Add task summary
-        const completed = project.todos.filter(todo => todo.completed).length;
-        const total = project.todos.length;
         const summary = document.createElement("span");
         summary.classList.add("project-summary");
-        summary.textContent = ` (${total} | ${completed} done)`;
+        const completed = project.todos.filter(t => t.completed).length;
+        summary.textContent = ` (${project.todos.length} | ${completed} done)`;
 
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "✏️";
-        editBtn.classList.add("edit-project");
-        editBtn.classList.add("edit-project");
-        editBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = project.name;
-            input.classList.add("edit-input");
-
-            input.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    const newName = input.value.trim();
-                    if (newName) {
-                        project.name = newName;
-                        saveProjects(projects);
-                        renderProjects();
-                        renderTodos();
-                    }
-                }
-            });
-            projectItem.replaceChild(input, nameSpan);
-            input.focus();
+        const editBtn = createButton("✏️", "edit-project", (e) => {
+            handleEditProject(e, project, nameSpan, projectItem)
+        });
+        const deleteBtn = createButton("🗑️", "delete-project", (e) => {
+            handleDeleteProject(e, project, index)
         });
 
-        // Click to set current project
+        projectItem.append(nameSpan, summary, editBtn, deleteBtn);
         projectItem.addEventListener("click", () => {
             currentProject = project;
             renderProjects();
             renderTodos();
         });
 
-        // Show which one is selected
-        if (currentProject === project) {
+        if (project === currentProject) {
             projectItem.classList.add("active");
+            const addTodoBtn = addTodoTemplate.content.cloneNode(true).firstElementChild;
+            addTodoBtn.addEventListener("click", () => {
+                document.getElementById("todoForm").style.display = "block";
+            });
+            projectItem.appendChild(addTodoBtn);
         }
 
-        // Delete button
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "🗑️";
-        deleteBtn.classList.add("delete-project");
-        deleteBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // prevent setting project
-
-            if (project === currentProject) {
-                alert("Cannot delete the active project. Switch to another project first.");
-                return;
-            }
-
-            if (confirm(`Are you sure you want to delete the project "${project.name}"?`)) {
-                projects.splice(index, 1);
-                saveProjects(projects);
-
-                // Fallback to first project if current was deleted
-                if (!projects.includes(currentProject)) {
-                    currentProject = projects[0];
-                }
-
-                renderProjects();
-                renderTodos();
-            }
-        });
-
-        projectItem.appendChild(nameSpan);
-        projectItem.appendChild(summary);
-        projectItem.appendChild(editBtn);
-        projectItem.appendChild(deleteBtn);
         projectContainer.appendChild(projectItem);
     });
 };
 
+const handleEditProject = (e, project, nameSpan, container) => {
+    e.stopPropagation();
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = project.name;
+    input.classList.add("edit-input");
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            const newName = input.value.trim();
+            if (newName) {
+                project.name = newName;
+                updateStorageAndRender();
+            }
+        }
+    });
+
+    container.replaceChild(input, nameSpan);
+    input.focus();
+};
+
+const handleDeleteProject = (e, project, index) => {
+    e.stopPropagation();
+    if (project === currentProject) {
+        alert("Cannot delete the active project. Switch to another project first.");
+        return;
+    }
+
+    if (confirm(`Are you sure you want to delete the project "${project.name}"?`)) {
+        projects.splice(index, 1);
+        if (!projects.includes(currentProject)) {
+            currentProject = projects[0] || null;
+        }
+        updateStorageAndRender();
+    }
+};
+
+// ============================
+// Todo Rendering
+// ============================
+
 const renderTodos = () => {
-    const todoContainer = document.getElementById("todos");
     todoContainer.innerHTML = "";
+
+    if (!currentProject) return;
 
     currentProject.todos.forEach((todo, index) => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
-    
-        // Format due date
+
         const due = document.createElement("span");
         due.classList.add("todo-due");
-        try {
-            const formattedDate = format(parseISO(todo.dueDate), "MMM dd, yyyy");
-            due.textContent = `Due : ${formattedDate}`;
-        }
-        catch {
-            due.textContent = "Due: Invalid date";
-        }
-
-        if (todo.completed) {
-            todoElement.classList.add("completed");
-        }
+        due.textContent = `Due: ${getFormattedDate(todo.dueDate)}`;
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = todo.completed;
-
-        // Toggle completed state
         checkbox.addEventListener("change", () => {
             todo.completed = checkbox.checked;
-            saveProjects(projects);
-            renderTodos(); // re-render to apply styles
+            updateStorageAndRender();
         });
-
-        // Add class based on priority
-        if (todo.priority === "high") {
-            todoElement.classList.add("high-priority");
-        } else if (todo.priority === "medium") {
-            todoElement.classList.add("medium-priority");
-        } else if (todo.priority === "low") {
-            todoElement.classList.add("low-priority");
-        }
 
         const text = document.createElement("span");
         text.textContent = `${todo.title} - (${todo.priority})`;
         text.style.cursor = "pointer";
+        text.addEventListener("click", () => openEditForm(todo, index));
 
-        // Clicking opens the edit form
-        text.addEventListener("click", () => {
-            openEditForm(todo, index);
-        });
-
-        // Delete button
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "❌";
-        deleteBtn.style.marginLeft = "10px";
-        deleteBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // prevent opening the edit form
+        const deleteBtn = createButton("❌", null, (e) => {
+            e.stopPropagation();
             currentProject.todos.splice(index, 1);
-            saveProjects(projects);
-            renderTodos();
+            updateStorageAndRender();
         });
+        deleteBtn.style.marginLeft = "10px";
 
-        todoElement.appendChild(checkbox);
-        todoElement.appendChild(text);
-        todoElement.appendChild(due);
-        todoElement.appendChild(deleteBtn);
+        // Style by priority and status
+        if (todo.completed) todoElement.classList.add("completed");
+        todoElement.classList.add(`${todo.priority}-priority`);
+
+        todoElement.append(checkbox, text, due, deleteBtn);
         todoContainer.appendChild(todoElement);
     });
 };
 
+// ============================
+// Todo Edit Form
+// ============================
+
 const openEditForm = (todo, index) => {
-    document.getElementById("editTodoForm").style.display = "block";
-    document.getElementById("editTodoTitle").value = todo.title;
-    document.getElementById("editTodoDescription").value = todo.description;
-    document.getElementById("editTodoDueDate").value = todo.dueDate;
-    document.getElementById("editTodoPriority").value = todo.priority;
-
-    // Handle form submit inside this context
     const form = document.getElementById("editTodoForm");
-    const clonedForm = form.cloneNode(true);
-    form.parentNode.replaceChild(clonedForm, form);
+    form.style.display = "block";
 
-    clonedForm.addEventListener("submit", (e) => {
+    form["editTodoTitle"].value = todo.title;
+    form["editTodoDescription"].value = todo.description;
+    form["editTodoDueDate"].value = todo.dueDate;
+    form["editTodoPriority"].value = todo.priority;
+
+    const newForm = form.cloneNode(true);
+    form.parentNode.replaceChild(newForm, form);
+
+    newForm.addEventListener("submit", (e) => {
         e.preventDefault();
-
-        todo.title = document.getElementById("editTodoTitle").value;
-        todo.description = document.getElementById("editTodoDescription").value;
-        todo.dueDate = document.getElementById("editTodoDueDate").value;
-        todo.priority = document.getElementById("editTodoPriority").value;
-
-        saveProjects(projects);
-        renderTodos();
-        clonedForm.style.display = "none";
+        todo.title = newForm["editTodoTitle"].value;
+        todo.description = newForm["editTodoDescription"].value;
+        todo.dueDate = newForm["editTodoDueDate"].value;
+        todo.priority = newForm["editTodoPriority"].value;
+        updateStorageAndRender();
+        newForm.style.display = "none";
     });
 
-    document.getElementById("cancelEditBtn").addEventListener("click", () => {
-        clonedForm.style.display = "none";
+    newForm["cancelEditBtn"].addEventListener("click", () => {
+        newForm.style.display = "none";
     });
 };
+
+// ============================
+// Add Todo
+// ============================
 
 const addTodoToCurrentProject = (todo) => {
+    if (!currentProject) return;
     currentProject.todos.push(todo);
-    saveProjects(projects);
-    renderTodos();
+    updateStorageAndRender();
 };
 
-export { setProjects, renderProjects, renderTodos, addTodoToCurrentProject };
+// Cancel button for Add Todo
+const cancelBtn = document.getElementById("cancelTodoBtn");
+if (cancelBtn) {
+    cancelBtn.addEventListener("click", () => {
+        document.getElementById("todoForm").style.display = "none";
+    });
+}
+
+export {
+    setProjects,
+    renderProjects,
+    renderTodos,
+    addTodoToCurrentProject
+};
