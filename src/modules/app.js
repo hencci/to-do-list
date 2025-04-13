@@ -21,16 +21,6 @@ const initApp = () => {
     const addTodoBtn = document.getElementById("addTodoBtn");
     const cancelTodoBtn = document.getElementById("cancelTodoBtn");
 
-    document.getElementById("addProjectBtn").addEventListener("click", () => {
-        const projectName = prompt("Enter project name:");
-        if (projectName) {
-            const newProject = new Project(projectName);
-            projects.push(newProject);
-            saveProjects(projects);
-            renderProjects();
-        }
-    });
-
     addTodoBtn.addEventListener("click", () => {
         todoForm.reset();
         todoForm.style.display = "block";
