@@ -14,6 +14,34 @@ const addTodoTemplate = document.getElementById("addTodoBtnTemplate");
 // Utility Functions
 // ============================
 
+const addProjectBtn = document.getElementById("addProjectBtn");
+const projectForm = document.getElementById("projectForm");
+const projectNameInput = document.getElementById("projectNameInput");
+const cancelProjectBtn = document.getElementById("cancelProjectBtn");
+
+addProjectBtn.addEventListener("click", () => {
+    projectForm.style.display = "block";
+    projectNameInput.focus();
+});
+
+cancelProjectBtn.addEventListener("click", () => {
+    projectForm.style.display = "none";
+    projectNameInput.value = "";
+});
+
+projectForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = projectNameInput.value.trim();
+    if (name) {
+        const newProject = new Project(name);
+        projects.push(newProject);
+        currentProject = newProject;
+        updateStorageAndRender();
+    }
+    projectForm.style.display = "none";
+    projectNameInput.value = "";
+});
+
 const createButton = (text, className, handler) => {
     const btn = document.createElement("button");
     btn.textContent = text;
