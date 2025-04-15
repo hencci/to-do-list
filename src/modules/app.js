@@ -22,7 +22,6 @@ const initApp = () => {
     const cancelTodoBtn = document.getElementById("cancelTodoBtn");
 
     addTodoBtn.addEventListener("click", () => {
-        todoForm.reset();
         todoForm.style.display = "block";
     });
 
@@ -41,6 +40,7 @@ const initApp = () => {
         if (title && dueDate && priority) {
             const newTodo = new Todo(title, description, dueDate, priority);
             addTodoToCurrentProject(newTodo);
+            todoForm.reset();
             todoForm.style.display = "none";
         }
     });
