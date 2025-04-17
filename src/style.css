@@ -1,142 +1,156 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    padding: 20px;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
   
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  #addProjectBtn,
-  #addTodoBtn {
-    margin: 5px;
-    padding: 10px 15px;
-    font-size: 14px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  #addProjectBtn:hover,
-  #addTodoBtn:hover {
-    background-color: #0056b3;
-  }
-  
-  #projects, #todos {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .project-item {
-    background-color: white;
-    padding: 10px;
-    border-left: 6px solid #007bff;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .project-item.active {
-    background-color: #dff0ff;
-    border-left-color: #0056b3;
-  }
-  
-  .project-name {
-    font-weight: bold;
-    flex: 1;
-  }
-  
-  .edit-input {
-    flex: 1;
-    padding: 5px;
-    font-size: 14px;
-  }
-  
-  .edit-project,
-  .delete-project {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .todo {
-    background-color: white;
-    padding: 10px;
-    border-left: 4px solid #ccc;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .todo.completed {
-    opacity: 0.6;
-    text-decoration: line-through;
-  }
-  
-  .todo-due {
-    margin-left: auto;
-    font-size: 12px;
-    color: #555;
-  }
-  
-  .high-priority {
-    border-left-color: #dc3545;
-  }
-  
-  .medium-priority {
-    border-left-color: #ffc107;
-  }
-  
-  .low-priority {
-    border-left-color: #28a745;
-  }
-  
-  form {
-    margin-top: 20px;
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    max-width: 400px;
-  }
-  
-  form h3 {
-    margin-top: 0;
-  }
-  
-  form input,
-  form select,
-  form button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 8px;
-    font-size: 14px;
-  }
-  
-  form button[type="submit"] {
-    background-color: #28a745;
-    color: white;
-    border: none;
-  }
-  
-  form button[type="button"] {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-  }
-  
-  form button:hover {
-    opacity: 0.9;
-  }  
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#addProjectBtn,
+#addTodoBtn {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#addProjectBtn:hover,
+#addTodoBtn:hover {
+  background-color: #0056b3;
+}
+
+#projects, #todos {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-item.active {
+  background-color: #dff0ff;
+  border-left-color: #0056b3;
+}
+
+.project-name {
+  font-weight: bold;
+  flex: 1;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.edit-project,
+.delete-project {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.todo {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-left: 4px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.todo.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.todo-due {
+  margin-left: auto;
+  font-size: 12px;
+  color: #555;
+}
+
+.high-priority {
+  border-left-color: #dc3545;
+}
+
+.medium-priority {
+  border-left-color: #ffc107;
+}
+
+.low-priority {
+  border-left-color: #28a745;
+}
+
+form {
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  max-width: 400px;
+}
+
+form h3 {
+  margin-top: 0;
+}
+
+form input,
+form select,
+form button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  font-size: 14px;
+}
+
+form button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+form button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+form button:hover {
+  opacity: 0.9;
+}
+
+.project-item {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.project-item .project-name,
+.project-item .project-summary,
+.project-item .edit-project,
+.project-item .delete-project,
+.project-item button {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.project-todos {
+  margin-top: 10px;
+  padding-left: 20px;
+}

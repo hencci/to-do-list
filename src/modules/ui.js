@@ -7,7 +7,6 @@ let projects = [];
 let currentProject = null;
 
 const projectContainer = document.getElementById("projects");
-const todoContainer = document.getElementById("todos");
 const addTodoTemplate = document.getElementById("addTodoBtnTemplate");
 
 // ============================
@@ -53,7 +52,6 @@ const createButton = (text, className, handler) => {
 const updateStorageAndRender = () => {
     saveProjects(projects);
     renderProjects();
-    renderTodos();
 };
 
 const getFormattedDate = (dateStr) => {
@@ -104,18 +102,28 @@ const renderProjects = () => {
         projectItem.addEventListener("click", () => {
             currentProject = project;
             renderProjects();
-            renderTodos();
         });
 
         if (project === currentProject) {
             projectItem.classList.add("active");
+        
+            // Add Todo button
             const addTodoBtn = addTodoTemplate.content.cloneNode(true).firstElementChild;
             addTodoBtn.addEventListener("click", () => {
-                document.getElementById("todoForm").style.display = "block";
+                const todoForm = document.getElementById("todoForm");
+                todoForm.reset();
+                todoForm.style.display = "block";
             });
+        
             projectItem.appendChild(addTodoBtn);
+        
+            // Add Todo container directly under the project
+            const projectTodoContainer = document.createElement("div");
+            projectTodoContainer.classList.add("project-todos");
+            renderTodos(projectTodoContainer); // Modified to render into this container
+            projectItem.appendChild(projectTodoContainer);
         }
-
+        
         projectContainer.appendChild(projectItem);
     });
 };
@@ -161,10 +169,9 @@ const handleDeleteProject = (e, project, index) => {
 // Todo Rendering
 // ============================
 
-const renderTodos = () => {
-    todoContainer.innerHTML = "";
-
-    if (!currentProject) return;
+const renderTodos = (container) => {
+    if (!container || !currentProject) return;
+    container.innerHTML = "";
 
     currentProject.todos.forEach((todo, index) => {
         const todoElement = document.createElement("div");
@@ -199,7 +206,7 @@ const renderTodos = () => {
         todoElement.classList.add(`${todo.priority}-priority`);
 
         todoElement.append(checkbox, text, due, deleteBtn);
-        todoContainer.appendChild(todoElement);
+        container.appendChild(todoElement);
     });
 };
 
