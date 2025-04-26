@@ -268,9 +268,11 @@ if (cancelBtn) {
     });
 }
 
+const getCurrentProject = () => currentProject;
 export {
     setProjects,
     renderProjects,
     renderTodos,
-    addTodoToCurrentProject
+    addTodoToCurrentProject,
+    getCurrentProject
 };

@@ -1,8 +1,9 @@
 import { Project } from './project';
 import { Todo } from './todo';
 import { saveProjects, loadProjects } from './storage';
-import { setProjects, renderProjects, addTodoToCurrentProject } from './ui';
+import { setProjects, getCurrentProject, renderProjects, addTodoToCurrentProject } from './ui';
 import { isDuplicateTodo } from './validators';
+import { showInlineMessage, clearInlineMessage } from './uiHelpers'
 
 let projects = loadProjects().map((p) => {
     const project = new Project(p.name);
@@ -41,11 +42,12 @@ const initApp = () => {
 
         if (!title || !dueDate || !priority) return;
 
-        if (isDuplicateTodo(currentProject.todos, title)) {
+        const current = getCurrentProject();
+        if (isDuplicateTodo(current?.todos || [], title)) {
             showInlineMessage("todoError", "Todo title already exists in this project.");
             return;
         }
-        
+
         const newTodo = new Todo(title, description, dueDate, priority);
         addTodoToCurrentProject(newTodo);
         todoForm.reset();
