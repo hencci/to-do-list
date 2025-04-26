@@ -32,7 +32,7 @@ const initApp = () => {
     todoForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const title = document.getElementById("todoTitle").value;
+        const title = document.getElementById("todoTitle").value.trim();
         const description = document.getElementById("todoDescription").value;
         const dueDate = document.getElementById("todoDueDate").value;
         const priority = document.getElementById("todoPriority").value;
