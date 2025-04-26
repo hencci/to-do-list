@@ -2,6 +2,8 @@ import { format, parseISO } from "date-fns";
 import { Project } from './project';
 import { Todo } from './todo';
 import { saveProjects, loadProjects } from './storage';
+import { isDuplicateProject } from './validators';
+import { showInlineMessage, clearInlineMessage } from './uiHelpers'
 
 let projects = [];
 let currentProject = null;
@@ -31,12 +33,19 @@ cancelProjectBtn.addEventListener("click", () => {
 projectForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = projectNameInput.value.trim();
-    if (name) {
-        const newProject = new Project(name);
-        projects.push(newProject);
-        currentProject = newProject;
-        updateStorageAndRender();
+    clearInlineMessage("projectError");
+
+    if (!name) return;
+    if (isDuplicateProject(projects, name)) {
+        showInlineMessage("projectError", "Project name already exists.");
+        return;
     }
+
+    const newProject = new Project(name);
+    projects.push(newProject);
+    currentProject = newProject;
+    updateStorageAndRender();
+
     projectForm.style.display = "none";
     projectNameInput.value = "";
 });
