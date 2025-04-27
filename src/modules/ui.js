@@ -3,6 +3,7 @@ import { Project } from './project';
 import { Todo } from './todo';
 import { saveProjects, loadProjects } from './storage';
 import { isDuplicateProject } from './validators';
+import { isDuplicateNewProject, isDuplicateNewTodo } from "./newValidators";
 import { showInlineMessage, clearInlineMessage } from './uiHelpers'
 
 let projects = [];
@@ -69,6 +70,27 @@ const getFormattedDate = (dateStr) => {
     } catch {
         return "Invalid date";
     }
+};
+
+const showInlineMessag = (element, message) => {
+    let msg = document.createElement("div");
+    msg.classList.add("inline-message");
+    msg.textContent = message;
+    msg.style.color = "red";
+    msg.style.fontSize = "0.8em";
+    msg.style.marginTop = "4px";
+
+    if (element.parentNode.querySelector(".inline-message")) {
+        return; // Don't stack multiple messages
+    }
+
+    element.parentNode.appendChild(msg);
+
+    setTimeout(() => {
+        if (msg.parentNode) {
+            msg.parentNode.removeChild(msg);
+        }
+    }, 3000); // Auto-remove after 3 seconds
 };
 
 // ============================
@@ -147,9 +169,11 @@ const handleEditProject = (e, project, nameSpan, container) => {
     input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             const newName = input.value.trim();
-            if (newName) {
+            if (newName && !isDuplicateNewProject(projects.filter(p => p !== project), newName)) {
                 project.name = newName;
                 updateStorageAndRender();
+            } else {
+                showInlineMessag(input, "Project name already exists!");
             }
         }
     });
@@ -237,12 +261,18 @@ const openEditForm = (todo, index) => {
 
     newForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        todo.title = newForm["editTodoTitle"].value;
-        todo.description = newForm["editTodoDescription"].value;
-        todo.dueDate = newForm["editTodoDueDate"].value;
-        todo.priority = newForm["editTodoPriority"].value;
-        updateStorageAndRender();
-        newForm.style.display = "none";
+        const newTitle = newForm["editTodoTitle"].value.trim();
+    
+        if (!isDuplicateNewTodo(currentProject.todos.filter(t => t !== todo), newTitle)) {
+            todo.title = newTitle;
+            todo.description = newForm["editTodoDescription"].value;
+            todo.dueDate = newForm["editTodoDueDate"].value;
+            todo.priority = newForm["editTodoPriority"].value;
+            updateStorageAndRender();
+            newForm.style.display = "none";
+        } else {
+            showInlineMessag(newForm["editTodoTitle"], "Todo title already exists!");
+        }
     });
 
     newForm["cancelEditBtn"].addEventListener("click", () => {
