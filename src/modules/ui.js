@@ -151,8 +151,8 @@ const renderProjects = () => {
             // Add Todo container directly under the project
             const projectTodoContainer = document.createElement("div");
             projectTodoContainer.classList.add("project-todos");
-            renderTodos(projectTodoContainer); // Modified to render into this container
             projectItem.appendChild(projectTodoContainer);
+            renderTodos(projectTodoContainer); // Modified to render into this container
         }
         
         projectContainer.appendChild(projectItem);
@@ -204,28 +204,22 @@ const handleDeleteProject = (e, project, index) => {
 
 const renderTodos = (container) => {
     if (!container || !currentProject) return;
-    container.innerHTML = "";
 
     currentProject.todos.forEach((todo, index) => {
         const todoElement = document.createElement("div");
         todoElement.classList.add("todo");
 
-        const due = document.createElement("span");
-        due.classList.add("todo-due");
-        due.textContent = `Due: ${getFormattedDate(todo.dueDate)}`;
-
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = todo.completed;
-        checkbox.addEventListener("change", () => {
-            todo.completed = checkbox.checked;
-            updateStorageAndRender();
-        });
 
         const text = document.createElement("span");
         text.textContent = `${todo.title} - (${todo.priority})`;
         text.style.cursor = "pointer";
-        text.addEventListener("click", () => openEditForm(todo, index));
+
+        const due = document.createElement("span");
+        due.classList.add("todo-due");
+        due.textContent = `Due: ${getFormattedDate(todo.dueDate)}`;
 
         const deleteBtn = createButton("❌", null, (e) => {
             e.stopPropagation();
@@ -234,9 +228,24 @@ const renderTodos = (container) => {
         });
         deleteBtn.style.marginLeft = "10px";
 
-        // Style by priority and status
-        if (todo.completed) todoElement.classList.add("completed");
+        // Apply styles based on initial completed state
+        if (todo.completed) {
+            todoElement.classList.add("completed");
+        }
         todoElement.classList.add(`${todo.priority}-priority`);
+
+        // 📌 Handle checkbox change
+        checkbox.addEventListener("change", () => {
+            todo.completed = checkbox.checked;
+            if (todo.completed) {
+                todoElement.classList.add("completed");
+            } else {
+                todoElement.classList.remove("completed");
+            }
+            updateStorageAndRender();
+        });
+
+        text.addEventListener("click", () => openEditForm(todo, index));
 
         todoElement.append(checkbox, text, due, deleteBtn);
         container.appendChild(todoElement);
