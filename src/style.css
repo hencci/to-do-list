@@ -154,3 +154,10 @@ form button:hover {
   margin-top: 10px;
   padding-left: 20px;
 }
+
+#projectNameInput, #todoTitle,
+#todoDescription, #todoDueDate,
+#editTodoTitle, #editTodoDueDate,
+#editTodoDescription {
+  width: 96%;
+}
